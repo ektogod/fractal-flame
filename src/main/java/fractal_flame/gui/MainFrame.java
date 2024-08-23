@@ -13,27 +13,32 @@ import java.io.IOException;
 @Getter
 @Component
 public class MainFrame extends JFrame {
-    @Autowired
     private TransformationsPanel transformationsPanel;
-
-    @Autowired
     private SettingsPanel settingsPanel;
-
-    @Autowired
     private InfoPanel infoPanel;
+    private AutoSavePanel autoSavePanel;
 
     private final static int WIDTH = 450;
     private final static int HEIGHT = 450;
+
+    @Autowired
+    public MainFrame(TransformationsPanel transformationsPanel, SettingsPanel settingsPanel, InfoPanel infoPanel, AutoSavePanel autoSavePanel){
+        this.transformationsPanel = transformationsPanel;
+        this.settingsPanel = settingsPanel;
+        this.infoPanel = infoPanel;
+        this.autoSavePanel = autoSavePanel;
+    }
 
     @PostConstruct
     public void init() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                JTabbedPane settingsPanels = new JTabbedPane();
+                JTabbedPane settingsPanels = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
                 settingsPanels.add("image settings", settingsPanel);
                 settingsPanels.add("transformation settings", transformationsPanel);
                 settingsPanels.add("some info", infoPanel);
+                settingsPanels.add("Auto save settings", autoSavePanel);
 
                 add(settingsPanels);
 
@@ -53,9 +58,5 @@ public class MainFrame extends JFrame {
         };
 
         worker.execute();
-    }
-
-
-    public MainFrame() throws IOException {
     }
 }

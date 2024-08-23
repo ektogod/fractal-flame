@@ -20,8 +20,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Getter
@@ -53,7 +56,7 @@ public class SettingsPanel extends JPanel {
     private BackgroundService backgroundService;
 
     @Autowired
-    public SettingsPanel(AppService appService, BackgroundService backgroundService, AppConfig config) throws IOException {
+    public SettingsPanel(AppService appService, BackgroundService backgroundService, AppConfig config) {
         this.service = appService;
         this.config = config;
         this.backgroundService = backgroundService;
@@ -180,7 +183,6 @@ public class SettingsPanel extends JPanel {
 
                     FractalFlameBuilder builder = createBuilder(width, height);
                     FractalFlameImage image = new FractalFlameImage(width, height);
-                    //image.clearPixels();
 
                     List<Transformation> linTransformations = TransformationUtility.buildAffineTransformation(transformationAmount);
                     List<Transformation> nonLinTransformations = TransformationUtility.getNonLinearTransformations(service);
@@ -198,7 +200,12 @@ public class SettingsPanel extends JPanel {
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int fileChooserResult = fileChooser.showOpenDialog(null);
                 if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
-                    ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), fileChooser.getSelectedFile().toPath());
+                    try {
+                        ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), fileChooser.getSelectedFile().toPath());
+                    }
+                    catch (IOException ex){
+                        JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
+                    }
                 }
             }
         });
@@ -242,6 +249,14 @@ public class SettingsPanel extends JPanel {
             protected void done() {
                 bootFrame.endAnimation();
                 bootFrame.dispose();
+                if(service.isAutoSaveFlag()){
+                    try {
+                        ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), Paths.get(service.getPathToFolder()));
+                    }
+                    catch (IOException ex){
+                        JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
+                    }
+                }
             }
         };
 

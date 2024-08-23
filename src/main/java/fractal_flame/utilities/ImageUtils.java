@@ -10,16 +10,12 @@ import java.nio.file.Paths;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ImageUtils {
-    public static void save(BufferedImage image, Path path){
-        try {
-            path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", ThreadLocalRandom.current().nextInt(0, 10000)));
-            ImageIO.write(image, "png", path.toFile());
-        }catch (IOException ex){
-            System.err.println("Bebra");
-        }
+    public static void save(BufferedImage image, Path path) throws IOException {
+        path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", ThreadLocalRandom.current().nextInt(0, 10000)));
+        ImageIO.write(image, "png", path.toFile());
     }
 
-    public static BufferedImage convertIntoBufImage(FractalFlameImage fractalImage){
+    public static BufferedImage convertIntoBufImage(FractalFlameImage fractalImage) {
         BufferedImage image = new BufferedImage(fractalImage.getWidth(), fractalImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         for (int i = 0; i < fractalImage.getPixels().length - 1; ++i) {

@@ -15,12 +15,12 @@ public class BackgroundService {
     private Image backgroundImage;
     private Image bootBackgroundImage;
 
-    public BackgroundService() throws IOException {
+    public BackgroundService() {
         defineBackgroundImage();
         setBootBackgroundImage("/backgroundImages/bootBackground.png");
     }
 
-    public void defineBackgroundImage() throws IOException {
+    public void defineBackgroundImage(){
         Random random = new Random();
         int num = random.nextInt(3);
         switch (num) {
@@ -36,13 +36,21 @@ public class BackgroundService {
         }
     }
 
-    private void setBackgroundImage(String path) throws IOException {
+    private void setBackgroundImage(String path) {
         InputStream stream = getClass().getResourceAsStream(path);
-        backgroundImage = ImageIO.read(stream);
+        try {
+            backgroundImage = ImageIO.read(stream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void setBootBackgroundImage(String path) throws IOException{
+    private void setBootBackgroundImage(String path){
         InputStream stream = getClass().getResourceAsStream(path);
-        bootBackgroundImage = ImageIO.read(stream);
+        try {
+            bootBackgroundImage = ImageIO.read(stream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

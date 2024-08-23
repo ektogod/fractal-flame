@@ -26,7 +26,6 @@ public class BootFrame extends JFrame {
         setBackgroundImage(backgroundService);
         notification.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        //setLayout(new BorderLayout());
         add(notification);
         setSize(WIDTH, HEIGHT);
 

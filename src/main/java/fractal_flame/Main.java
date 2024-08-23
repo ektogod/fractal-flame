@@ -10,10 +10,10 @@ import java.io.IOException;
 
 @SpringBootApplication(scanBasePackages = "fractal_flame")
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ConfigurableApplicationContext context = new SpringApplicationBuilder(Main.class).headless(false).run(args);
 
-        MainFrame frame1 = context.getBean(MainFrame.class);
-        frame1.init();
+        MainFrame frame = context.getBean(MainFrame.class);
+        frame.init();
     }
 }

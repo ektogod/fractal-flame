@@ -88,63 +88,14 @@ public class TransformationsPanel extends JPanel {
     }
 
     private void addListeners(){
-        sinusCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setSinusFlag(sinusCheckbox.isSelected());
-            }
-        });
-
-        sphereCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setSphereFlag(sphereCheckbox.isSelected());
-            }
-        });
-
-        polarCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setPolarFlag(polarCheckbox.isSelected());
-            }
-        });
-
-        heartCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setHeartFlag(heartCheckbox.isSelected());
-            }
-        });
-
-        diskCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setDiskFlag(diskCheckbox.isSelected());
-            }
-        });
-
-        hyperbolicCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setHyperbolicFlag(hyperbolicCheckbox.isSelected());
-            }
-        });
-
-        logarithmicCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setLogarithmicFlag(logarithmicCheckBox.isSelected());
-            }
-        });
-
-        spiralCheckBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                service.setSpiralFlag(spiralCheckBox.isSelected());
-            }
-        });
-
-
+        sinusCheckbox.addActionListener(e -> service.setSinusFlag(sinusCheckbox.isSelected()));
+        sphereCheckbox.addActionListener(e -> service.setSphereFlag(sphereCheckbox.isSelected()));
+        polarCheckbox.addActionListener(e -> service.setPolarFlag(polarCheckbox.isSelected()));
+        heartCheckbox.addActionListener(e -> service.setHeartFlag(heartCheckbox.isSelected()));
+        diskCheckbox.addActionListener(e -> service.setDiskFlag(diskCheckbox.isSelected()));
+        hyperbolicCheckbox.addActionListener(e -> service.setHyperbolicFlag(hyperbolicCheckbox.isSelected()));
+        logarithmicCheckBox.addActionListener(e -> service.setLogarithmicFlag(logarithmicCheckBox.isSelected()));
+        spiralCheckBox.addActionListener(e -> service.setSpiralFlag(spiralCheckBox.isSelected()));
     }
 
     @Override
