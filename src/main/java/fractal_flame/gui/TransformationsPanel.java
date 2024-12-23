@@ -6,13 +6,9 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static javax.swing.BoxLayout.*;
 
@@ -27,6 +23,9 @@ public class TransformationsPanel extends JPanel {
     private JCheckBox hyperbolicCheckbox = new JCheckBox("Hyperbolic transformation");
     private JCheckBox logarithmicCheckBox = new JCheckBox("Logarithmic transformation");
     private JCheckBox spiralCheckBox = new JCheckBox("Spiral transformation");
+    private JCheckBox wavesCheckBox = new JCheckBox("Waves transformation");
+    private JCheckBox mobiusCheckBox = new JCheckBox("Mobius transformation");
+    private JCheckBox collatzCheckBox = new JCheckBox("Collatz transformation");
 
     private Image backgroundImage;
     private AppService service;
@@ -67,6 +66,15 @@ public class TransformationsPanel extends JPanel {
         spiralCheckBox.setSelected(true);
         service.setSpiralFlag(true);
 
+        wavesCheckBox.setSelected(false);
+        service.setWavesFlag(false);
+
+        mobiusCheckBox.setSelected(false);
+        service.setMobiusFlag(false);
+
+        collatzCheckBox.setSelected(false);
+        service.setCollatzFlag(false);
+
         sinusCheckbox.setOpaque(false);
         sphereCheckbox.setOpaque(false);
         polarCheckbox.setOpaque(false);
@@ -75,6 +83,9 @@ public class TransformationsPanel extends JPanel {
         hyperbolicCheckbox.setOpaque(false);
         logarithmicCheckBox.setOpaque(false);
         spiralCheckBox.setOpaque(false);
+        wavesCheckBox.setOpaque(false);
+        mobiusCheckBox.setOpaque(false);
+        collatzCheckBox.setOpaque(false);
 
         setAlignmentY(CENTER_ALIGNMENT);
         add(sinusCheckbox);
@@ -85,6 +96,9 @@ public class TransformationsPanel extends JPanel {
         add(hyperbolicCheckbox);
         add(logarithmicCheckBox);
         add(spiralCheckBox);
+        add(wavesCheckBox);
+        add(mobiusCheckBox);
+        add(collatzCheckBox);
     }
 
     private void addListeners(){
@@ -96,6 +110,9 @@ public class TransformationsPanel extends JPanel {
         hyperbolicCheckbox.addActionListener(e -> service.setHyperbolicFlag(hyperbolicCheckbox.isSelected()));
         logarithmicCheckBox.addActionListener(e -> service.setLogarithmicFlag(logarithmicCheckBox.isSelected()));
         spiralCheckBox.addActionListener(e -> service.setSpiralFlag(spiralCheckBox.isSelected()));
+        wavesCheckBox.addActionListener(e -> service.setWavesFlag(wavesCheckBox.isSelected()));
+        mobiusCheckBox.addActionListener(e -> service.setMobiusFlag(mobiusCheckBox.isSelected()));
+        collatzCheckBox.addActionListener(e -> service.setCollatzFlag(collatzCheckBox.isSelected()));
     }
 
     @Override

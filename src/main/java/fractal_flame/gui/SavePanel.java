@@ -11,8 +11,9 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 @Component
-public class AutoSavePanel extends JPanel {
+public class SavePanel extends JPanel {
     private final JCheckBox autoSaveCheckBox = new JCheckBox("Enable auto saving");
+    private final JCheckBox filePathCheckBox = new JCheckBox("Use this path by saveButton");
     private final JButton setFolderButton = new JButton("Set folder for saving");
     private JTextField folderField = new JTextField(30);
 
@@ -21,7 +22,7 @@ public class AutoSavePanel extends JPanel {
     private Image backgroundImage;
 
     @Autowired
-    public AutoSavePanel(BackgroundService backgroundService, AppService service) {
+    public SavePanel(BackgroundService backgroundService, AppService service) {
         this.backgroundService = backgroundService;
         this.service = service;
         backgroundImage = backgroundService.getBackgroundImage();
@@ -34,6 +35,7 @@ public class AutoSavePanel extends JPanel {
 
         folderField.setHorizontalAlignment(JTextField.CENTER);
         autoSaveCheckBox.setOpaque(false);
+        filePathCheckBox.setOpaque(false);
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -53,6 +55,9 @@ public class AutoSavePanel extends JPanel {
 
         this.add(autoSaveCheckBox, gbc);
         gbc.gridy++;
+
+        this.add(filePathCheckBox, gbc);
+        gbc.gridy++;
     }
 
     private void addListeners() {
@@ -68,6 +73,10 @@ public class AutoSavePanel extends JPanel {
 
         autoSaveCheckBox.addActionListener(e -> {
             service.setAutoSaveFlag(autoSaveCheckBox.isSelected());
+        });
+
+        filePathCheckBox.addActionListener(e -> {
+            service.setFilePathFlag(filePathCheckBox.isSelected());
         });
 
         folderField.getDocument().addDocumentListener(new DocumentListener() {

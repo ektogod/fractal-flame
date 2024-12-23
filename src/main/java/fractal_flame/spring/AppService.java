@@ -19,7 +19,12 @@ public class AppService {
     private boolean hyperbolicFlag;
     private boolean logarithmicFlag;
     private boolean spiralFlag;
+    private boolean wavesFlag;
+    private boolean mobiusFlag;
+    private boolean collatzFlag;
 
     private boolean autoSaveFlag;
     private String pathToFolder;
+
+    private boolean filePathFlag; //true -> saveButton will save an image using path from savePanel
 }

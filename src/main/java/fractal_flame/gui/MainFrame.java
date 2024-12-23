@@ -3,12 +3,10 @@ package fractal_flame.gui;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 @Getter
 @Component
@@ -16,17 +14,17 @@ public class MainFrame extends JFrame {
     private TransformationsPanel transformationsPanel;
     private SettingsPanel settingsPanel;
     private InfoPanel infoPanel;
-    private AutoSavePanel autoSavePanel;
+    private SavePanel savePanel;
 
     private final static int WIDTH = 450;
     private final static int HEIGHT = 450;
 
     @Autowired
-    public MainFrame(TransformationsPanel transformationsPanel, SettingsPanel settingsPanel, InfoPanel infoPanel, AutoSavePanel autoSavePanel){
+    public MainFrame(TransformationsPanel transformationsPanel, SettingsPanel settingsPanel, InfoPanel infoPanel, SavePanel savePanel){
         this.transformationsPanel = transformationsPanel;
         this.settingsPanel = settingsPanel;
         this.infoPanel = infoPanel;
-        this.autoSavePanel = autoSavePanel;
+        this.savePanel = savePanel;
     }
 
     @PostConstruct
@@ -38,7 +36,7 @@ public class MainFrame extends JFrame {
                 settingsPanels.add("image settings", settingsPanel);
                 settingsPanels.add("transformation settings", transformationsPanel);
                 settingsPanels.add("some info", infoPanel);
-                settingsPanels.add("Auto save settings", autoSavePanel);
+                settingsPanels.add("save settings", savePanel);
 
                 add(settingsPanels);
 

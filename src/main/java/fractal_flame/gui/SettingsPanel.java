@@ -163,47 +163,48 @@ public class SettingsPanel extends JPanel {
     }
 
     private void addButtonEvents() {
-        generateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // getting data from the frame
-                    int width = Integer.parseInt(resXField.getText());
-                    int height = Integer.parseInt(resYField.getText());
-                    int samples = Integer.parseInt(samplesAmountField.getText());
-                    int iter = Integer.parseInt(iterAmountField.getText());
-                    int transformationAmount = Integer.parseInt(transAmountField.getText());
-                    int symmetryConst = Integer.parseInt(symmetryField.getText());
-                    double gammaConst = Double.parseDouble(gammaField.getText());
+        generateButton.addActionListener(e -> {
+            try {
+                // getting data from the frame
+                int width = Integer.parseInt(resXField.getText());
+                int height = Integer.parseInt(resYField.getText());
+                int samples = Integer.parseInt(samplesAmountField.getText());
+                int iter = Integer.parseInt(iterAmountField.getText());
+                int transformationAmount = Integer.parseInt(transAmountField.getText());
+                int symmetryConst = Integer.parseInt(symmetryField.getText());
+                double gammaConst = Double.parseDouble(gammaField.getText());
 
-                    // case when data is wrong
-                    if (width < 0 || height < 0 || samples < 0 || iter < 0 || transformationAmount < 0) {
-                        throw new NumberFormatException();
-                    }
-
-                    FractalFlameBuilder builder = createBuilder(width, height);
-                    FractalFlameImage image = new FractalFlameImage(width, height);
-
-                    List<Transformation> linTransformations = TransformationUtility.buildAffineTransformation(transformationAmount);
-                    List<Transformation> nonLinTransformations = TransformationUtility.getNonLinearTransformations(service);
-                    generateImage(builder, image, width, height, samples, iter, symmetryConst, gammaConst, linTransformations, nonLinTransformations);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Something wrong with input data");
+                // case when data is wrong
+                if (width < 0 || height < 0 || samples < 0 || iter < 0 || transformationAmount < 0) {
+                    throw new NumberFormatException();
                 }
+
+                FractalFlameBuilder builder = createBuilder(width, height);
+                FractalFlameImage image = new FractalFlameImage(width, height);
+
+                List<Transformation> linTransformations = TransformationUtility.buildAffineTransformation(transformationAmount);
+                List<Transformation> nonLinTransformations = TransformationUtility.getNonLinearTransformations(service);
+                generateImage(builder, image, width, height, samples, iter, symmetryConst, gammaConst, linTransformations, nonLinTransformations);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Something wrong with input data");
             }
         });
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        saveButton.addActionListener(e -> {
+            if (service.isFilePathFlag()) {
+                try {
+                    ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), Paths.get(service.getPathToFolder()));
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
+                }
+            } else {
                 JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int fileChooserResult = fileChooser.showOpenDialog(null);
                 if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
                     try {
                         ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), fileChooser.getSelectedFile().toPath());
-                    }
-                    catch (IOException ex){
+                    } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
                     }
                 }
@@ -249,11 +250,10 @@ public class SettingsPanel extends JPanel {
             protected void done() {
                 bootFrame.endAnimation();
                 bootFrame.dispose();
-                if(service.isAutoSaveFlag()){
+                if (service.isAutoSaveFlag()) {
                     try {
                         ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), Paths.get(service.getPathToFolder()));
-                    }
-                    catch (IOException ex){
+                    } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
                     }
                 }
