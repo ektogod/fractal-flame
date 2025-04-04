@@ -1,6 +1,7 @@
 package fractal_flame.utilities;
 
 import fractal_flame.builders.FractalFlameImage;
+import fractal_flame.config.ImageCounter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,8 +11,9 @@ import java.nio.file.Paths;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ImageUtils {
+    static ImageCounter counter = new ImageCounter();
     public static void save(BufferedImage image, Path path) throws IOException {
-        path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", ThreadLocalRandom.current().nextInt(0, 10000)));
+        path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", counter.getAndIncrement()));
         ImageIO.write(image, "png", path.toFile());
     }
 

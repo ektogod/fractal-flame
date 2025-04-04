@@ -1,4 +1,4 @@
-package fractal_flame.spring;
+package fractal_flame.config;
 
 import fractal_flame.gui.BootFrame;
 import lombok.Getter;

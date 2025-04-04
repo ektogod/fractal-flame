@@ -1,59 +1,58 @@
 package fractal_flame.gui;
 
 import fractal_flame.builders.*;
-import fractal_flame.spring.AppConfig;
+import fractal_flame.config.AppConfig;
+import fractal_flame.config.ImageCounter;
 import fractal_flame.spring.AppService;
 import fractal_flame.spring.BackgroundService;
 import fractal_flame.transformation.Transformation;
 import fractal_flame.utilities.ImageUtils;
 import fractal_flame.utilities.TransformationUtility;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+@Slf4j
 @Getter
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsPanel extends JPanel {
-    private final JTextField resXField = new JTextField(15);
-    private final JTextField resYField = new JTextField(15);
-    private final JTextField samplesAmountField = new JTextField(15);
-    private final JTextField iterAmountField = new JTextField(15);
-    private final JTextField transAmountField = new JTextField(15);
-    private final JTextField symmetryField = new JTextField(15);
-    private final JTextField gammaField = new JTextField(15);
+    final JTextField resXField = new JTextField(15);
+    final JTextField resYField = new JTextField(15);
+    final JTextField samplesAmountField = new JTextField(15);
+    final JTextField iterAmountField = new JTextField(15);
+    final JTextField transAmountField = new JTextField(15);
+    final JTextField symmetryField = new JTextField(15);
+    final JTextField gammaField = new JTextField(15);
 
-    private final JCheckBox gammaCorrectionCheckBox = new JCheckBox("Gamma correction");
+    final JCheckBox gammaCorrectionCheckBox = new JCheckBox("Gamma correction");
 
-    private final ButtonGroup radioButtonsGroup = new ButtonGroup();
-    private final JRadioButton normalModeRButton = new JRadioButton("Normal mode");
-    private final JRadioButton cosmicModeRButton = new JRadioButton("Cosmic mode");
-    private final JRadioButton zendalaModeRButton = new JRadioButton("Zendala mode");
+    final ButtonGroup radioButtonsGroup = new ButtonGroup();
+    final JRadioButton normalModeRButton = new JRadioButton("Normal mode");
+    final JRadioButton cosmicModeRButton = new JRadioButton("Cosmic mode");
+    final JRadioButton zendalaModeRButton = new JRadioButton("Zendala mode");
 
-    private final JButton saveButton = new JButton("Save the image");
-    private final JButton generateButton = new JButton("Generate an image");
+    final JButton saveButton = new JButton("Save the image");
+    final JButton generateButton = new JButton("Generate an image");
 
-    private FractalFlameImage curFractalFlameImage = null;
-    private Image backgroundImage;
+    FractalFlameImage curFractalFlameImage = null;
+    Image backgroundImage;
 
-    private AppService service;
-    private AppConfig config;
-    private BackgroundService backgroundService;
+    AppService service;
+    AppConfig config;
+    BackgroundService backgroundService;
 
     @Autowired
     public SettingsPanel(AppService appService, BackgroundService backgroundService, AppConfig config) {
@@ -138,7 +137,8 @@ public class SettingsPanel extends JPanel {
         this.add(saveButton, gbc);
 
         configComponents();
-        addButtonEvents();
+        addGenerateButtonEvent();
+        addSaveButtonEvent();
     }
 
     // initial settings
@@ -162,7 +162,7 @@ public class SettingsPanel extends JPanel {
         gammaCorrectionCheckBox.setOpaque(false);
     }
 
-    private void addButtonEvents() {
+    private void addGenerateButtonEvent() {
         generateButton.addActionListener(e -> {
             try {
                 // getting data from the frame
@@ -189,7 +189,9 @@ public class SettingsPanel extends JPanel {
                 JOptionPane.showMessageDialog(null, "Something wrong with input data");
             }
         });
+    }
 
+    private void addSaveButtonEvent(){
         saveButton.addActionListener(e -> {
             if (service.isFilePathFlag()) {
                 try {
@@ -209,6 +211,8 @@ public class SettingsPanel extends JPanel {
                     }
                 }
             }
+
+            log();
         });
     }
 
@@ -298,10 +302,65 @@ public class SettingsPanel extends JPanel {
         return builder;
     }
 
+    private void log(){
+        ImageCounter counter = new ImageCounter();
+        String mode;
+        if (getNormalModeRButton().isSelected()) {
+            mode = "Normal";
+        } else if (getCosmicModeRButton().isSelected()) {
+            mode = "Cosmic";
+        } else {
+            mode = "Zendala";
+        }
+
+        log.info("fractalFlameImage{} was saved with parameters: height {}, " +
+                        "width {}, " +
+                        "samples amount {}, " +
+                        "iterations amount {}, " +
+                        "affine transformation amount {}, " +
+                        "symmetry const {}, " +
+                        "gamma const {}, " +
+                        "gamma correction: {}, " +
+                        "mode: {}, " +
+                        "sinus: {}, " +
+                        "sphere: {}, " +
+                        "polar: {}, " +
+                        "heart: {}, " +
+                        "disk: {}, " +
+                        "hyperbolic: {}, " +
+                        "logarithmic: {}, " +
+                        "spiral: {}, " +
+                        "waves: {}, " +
+                        "mobius: {}, " +
+                        "collatz: {}",
+                counter.get(),
+                getResYField().getText(),
+                getResXField().getText(),
+                getSamplesAmountField().getText(),
+                getIterAmountField().getText(),
+                getTransAmountField().getText(),
+                getSymmetryField().getText(),
+                getGammaField().getText(),
+                getGammaCorrectionCheckBox().isSelected(),
+                mode,
+                service.isSinusFlag(),
+                service.isSphereFlag(),
+                service.isPolarFlag(),
+                service.isHeartFlag(),
+                service.isDiskFlag(),
+                service.isHyperbolicFlag(),
+                service.isLogarithmicFlag(),
+                service.isSpiralFlag(),
+                service.isWavesFlag(),
+                service.isMobiusFlag(),
+                service.isCollatzFlag());
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, this);
     }
+
 
 }
