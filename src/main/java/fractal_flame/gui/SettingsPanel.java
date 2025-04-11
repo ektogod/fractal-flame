@@ -193,9 +193,11 @@ public class SettingsPanel extends JPanel {
 
     private void addSaveButtonEvent(){
         saveButton.addActionListener(e -> {
+            String path = "";
             if (service.isFilePathFlag()) {
                 try {
                     ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), Paths.get(service.getPathToFolder()));
+                    path = service.getPathToFolder();
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
                 }
@@ -206,13 +208,14 @@ public class SettingsPanel extends JPanel {
                 if (fileChooserResult == JFileChooser.APPROVE_OPTION) {
                     try {
                         ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), fileChooser.getSelectedFile().toPath());
+                        path = fileChooser.getSelectedFile().getPath();
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
                     }
                 }
             }
 
-            log();
+            log(path);
         });
     }
 
@@ -257,6 +260,7 @@ public class SettingsPanel extends JPanel {
                 if (service.isAutoSaveFlag()) {
                     try {
                         ImageUtils.save(ImageUtils.convertIntoBufImage(curFractalFlameImage), Paths.get(service.getPathToFolder()));
+                        log(service.getPathToFolder());
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null, "Something went wrong with autosave! Check chosen folder.");
                     }
@@ -302,7 +306,7 @@ public class SettingsPanel extends JPanel {
         return builder;
     }
 
-    private void log(){
+    private void log(String path){
         ImageCounter counter = new ImageCounter();
         String mode;
         if (getNormalModeRButton().isSelected()) {
@@ -313,7 +317,7 @@ public class SettingsPanel extends JPanel {
             mode = "Zendala";
         }
 
-        log.info("fractalFlameImage{} was saved with parameters: height {}, " +
+        log.info("fractalFlameImage{} was saved to path {} with parameters: height {}, " +
                         "width {}, " +
                         "samples amount {}, " +
                         "iterations amount {}, " +
@@ -333,7 +337,8 @@ public class SettingsPanel extends JPanel {
                         "waves: {}, " +
                         "mobius: {}, " +
                         "collatz: {}",
-                counter.get(),
+                counter.get(path),
+                path,
                 getResYField().getText(),
                 getResXField().getText(),
                 getSamplesAmountField().getText(),

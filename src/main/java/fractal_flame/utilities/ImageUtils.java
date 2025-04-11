@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ImageUtils {
     static ImageCounter counter = new ImageCounter();
     public static void save(BufferedImage image, Path path) throws IOException {
-        path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", counter.getAndIncrement()));
+        path = Paths.get(path.toString() + String.format("\\fractalFlameImage%d.png", counter.getAndIncrement(path.toString())));
         ImageIO.write(image, "png", path.toFile());
     }
 

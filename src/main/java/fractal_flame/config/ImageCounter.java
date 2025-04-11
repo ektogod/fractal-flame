@@ -1,52 +1,63 @@
 package fractal_flame.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class ImageCounter {
-    private final File file = new File("src/main/java/fractal_flame/config/counter.properties");
+    //private final File file = new File("src/main/java/fractal_flame/config/counter.properties");
 
-    public long getAndIncrement(){
-        long increment;
-        Properties props;
-        try (var in = new FileInputStream(file)) {
-            props = new Properties();
-            props.load(in);
-            increment = Long.parseLong(props.getProperty("image.counter")) + 1;
-            props.setProperty("image.counter", increment + "");
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read counter file", e);
-        }
+    public int getAndIncrement(String path) {
+        int counter;
+        File file = new File(path + "/counter.txt");
+        if (!file.exists()) {
+            createFile(file);
+            counter = 1;
+        } else {
+            try (Scanner scanner = new Scanner(file)) {
+                counter = scanner.nextInt();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
 
-        try (var out = new FileOutputStream(file)) {
-            props.store(out, "");
-        } catch (IOException e) {
-            throw new RuntimeException("Something went wrong with properties saving", e);
-        }
-
-        return increment;
-    }
-
-    public long get(){
-        long counter;
-        Properties props;
-        try (var in = new FileInputStream(file)) {
-            props = new Properties();
-            props.load(in);
-            counter = Long.parseLong(props.getProperty("image.counter"));
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read counter file", e);
-        }
-
-        try (var out = new FileOutputStream(file)) {
-            props.store(out, "");
-        } catch (IOException e) {
-            throw new RuntimeException("Something went wrong with properties saving", e);
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                out.write((++counter + "").getBytes());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return counter;
     }
-}
+
+    public long get(String path) {
+        long counter;
+        File file = new File(path + "/counter.txt");
+        if (!file.exists()) {
+            createFile(file);
+            counter = 1;
+        } else {
+            try (Scanner scanner = new Scanner(file)) {
+                counter = scanner.nextInt();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return counter;
+    }
+
+        private void createFile (File file){
+            try {
+                if (file.createNewFile()) {
+                    try (FileOutputStream out = new FileOutputStream(file)) {
+                        out.write("1".getBytes());
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }

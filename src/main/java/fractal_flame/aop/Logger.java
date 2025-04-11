@@ -48,7 +48,7 @@ public class Logger {
                         "waves: {}, " +
                         "mobius: {}, " +
                         "collatz: {}",
-                counter.get(),
+                //counter.get(panel),
                 panel.getResYField().getText(),
                 panel.getResXField().getText(),
                 panel.getSamplesAmountField().getText(),
